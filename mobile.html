@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="麦田里的修猫手机版人像摄影作品集，呈现旧室微光、夜景烟火、暗调棚拍、季节外景、节日布景、国风造型与校园日常。">
+  <title>麦田里的修猫｜手机版摄影作品集</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --bg: #090807;
+      --ink: #f2e6d2;
+      --text: rgba(232, 216, 188, 0.8);
+      --muted: rgba(232, 216, 188, 0.55);
+      --line: rgba(238, 230, 216, 0.16);
+      --glass: rgba(238, 230, 216, 0.09);
+      --accent: #d8ad72;
+      --accent-strong: #ffd79b;
+      --sage: #8da18b;
+      --rose: #b9857a;
+      --qr-paper: #e2d3b9;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+      --cursor-x: 50vw;
+      --cursor-y: 50vh;
+      --glass-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.035),
+        inset 0 1.5px 0.5px rgba(255, 255, 255, 0.13),
+        inset 0 -2px 9px rgba(0, 0, 0, 0.46),
+        0 20px 56px rgba(0, 0, 0, 0.46),
+        0 0 46px rgba(216, 173, 114, 0.055);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-color: var(--accent) #0d0c0a;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(216, 173, 114, 0.11), transparent 24rem),
+        linear-gradient(180deg, #10100d 0%, #090807 54%, #050504 100%);
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Serif SC", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body.is-locked {
+      overflow: hidden;
+    }
+
+    button,
+    a {
+      color: inherit;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .mobile-shell {
+      position: relative;
+      min-height: 100svh;
+      overflow: hidden;
+      padding-bottom: calc(5.4rem + env(safe-area-inset-bottom));
+    }
+
+    .mobile-shell::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(115deg, transparent 0 32%, rgba(255, 236, 204, 0.04) 43%, transparent 54% 100%),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 7px);
+      mix-blend-mode: screen;
+      animation: mobileLightSweep 12s ease-in-out infinite alternate;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.12;
+      mix-blend-mode: screen;
+      background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px);
+      background-size: 12px 12px;
+    }
+
+    .tap-burst-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .tap-burst {
+      position: absolute;
+      left: var(--burst-x);
+      top: var(--burst-y);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 238, 208, 0.92), rgba(216, 173, 114, 0.32) 38%, transparent 70%);
+      box-shadow: 0 0 42px rgba(216, 173, 114, 0.66);
+      transform: translate(-50%, -50%);
+      animation: tapBurst 680ms ease-out forwards;
+    }
+
+    .topbar,
+    .bottom-dock,
+    .glass,
+    .series-copy,
+    .metric,
+    .method-card,
+    .slide-badge,
+    .qr-card,
+    .modal-card {
+      border: 1px solid rgba(238, 230, 216, 0.18);
+      background:
+        radial-gradient(circle at var(--local-x, 50%) var(--local-y, 8%), rgba(255, 246, 225, 0.14), transparent 42%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.022)),
+        rgba(13, 12, 10, 0.62);
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(24px) saturate(1.14);
+      -webkit-backdrop-filter: blur(24px) saturate(1.14);
+    }
+
+    .touchable {
+      position: relative;
+      overflow: hidden;
+      transition:
+        transform 260ms var(--ease-out),
+        filter 260ms var(--ease-out),
+        border-color 260ms var(--ease-out),
+        box-shadow 260ms var(--ease-out);
+    }
+
+    .touchable::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background: radial-gradient(circle at var(--local-x, 50%) var(--local-y, 50%), rgba(255, 241, 214, 0.3), transparent 34%);
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .touchable:hover::before,
+    .touchable.is-pressed::before {
+      opacity: 1;
+    }
+
+    .touchable.is-pressed {
+      border-color: rgba(255, 226, 173, 0.6);
+      filter: brightness(1.16) saturate(1.04);
+      box-shadow:
+        0 0 0 1px rgba(255, 226, 173, 0.34),
+        0 0 28px hsla(38, 30%, 72%, 0.44),
+        0 0 70px hsla(92, 18%, 64%, 0.14),
+        inset 0 1px 3px rgba(255, 255, 255, 0.18);
+    }
+
+    .topbar {
+      position: fixed;
+      top: max(12px, env(safe-area-inset-top));
+      left: 12px;
+      right: 12px;
+      z-index: 60;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 0.8rem;
+      min-height: 52px;
+      padding: 0.45rem 0.52rem 0.45rem 0.68rem;
+      border-radius: 999px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      gap: 0.52rem;
+      color: var(--ink);
+      font-weight: 950;
+    }
+
+    .brand-mark {
+      position: relative;
+      flex: 0 0 auto;
+      width: 25px;
+      height: 25px;
+      border: 2px solid var(--accent-strong);
+      border-radius: 50%;
+      box-shadow: 0 0 18px rgba(216, 173, 114, 0.26);
+    }
+
+    .brand-mark::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      width: 9px;
+      height: 9px;
+      border: 2px solid var(--accent-strong);
+      border-radius: 50%;
+    }
+
+    .brand span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0 0.82rem;
+      border: 1px solid rgba(216, 173, 114, 0.34);
+      border-radius: 999px;
+      color: #17120d;
+      background: linear-gradient(135deg, #f2d8ad, #d8ad72);
+      font-size: 0.84rem;
+      font-weight: 950;
+      box-shadow: 0 0 24px rgba(216, 173, 114, 0.22);
+    }
+
+    .hero {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      align-content: end;
+      min-height: 94svh;
+      padding: 6.2rem 1rem 7.6rem;
+      background:
+        linear-gradient(180deg, rgba(5, 5, 4, 0.04), rgba(5, 5, 4, 0.32) 44%, #090807 100%),
+        linear-gradient(90deg, rgba(7, 7, 6, 0.72), rgba(7, 7, 6, 0.12)),
+        url("assets/design/hero-portrait-wide.jpg") 58% center / cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 34vh;
+      background: linear-gradient(180deg, transparent, #090807 88%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 1rem;
+      width: min(100%, 420px);
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .hero h1 {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+      font-size: clamp(3.1rem, 16vw, 4.9rem);
+      line-height: 0.98;
+      font-weight: 500;
+      text-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.64),
+        0 0 22px rgba(216, 173, 114, 0.12);
+      animation: titleRise 840ms var(--ease-out) both;
+    }
+
+    .hero h1 span {
+      display: block;
+      color: var(--accent-strong);
+    }
+
+    .gradient-copy {
+      background: linear-gradient(100deg, rgba(226, 208, 173, 0.9), rgba(216, 173, 114, 0.78), rgba(141, 161, 139, 0.72));
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: textGradientFlow 8s ease-in-out infinite alternate;
+    }
+
+    .hero-copy {
+      width: min(100%, 360px);
+      margin: 0;
+      font-size: 1.03rem;
+      line-height: 1.78;
+      font-weight: 750;
+      text-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+      animation: titleRise 840ms 120ms var(--ease-out) both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.62rem;
+      flex-wrap: wrap;
+      animation: titleRise 840ms 210ms var(--ease-out) both;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 1rem;
+      border: 1px solid rgba(238, 230, 216, 0.2);
+      border-radius: 999px;
+      color: rgba(240, 228, 207, 0.92);
+      background: rgba(238, 230, 216, 0.08);
+      font-size: 0.88rem;
+      font-weight: 900;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .button--primary {
+      color: #17120d;
+      border-color: rgba(255, 215, 155, 0.72);
+      background: linear-gradient(135deg, #f2d8ad, #d8ad72);
+      box-shadow: 0 0 30px rgba(216, 173, 114, 0.24);
+    }
+
+    .mobile-section {
+      position: relative;
+      z-index: 2;
+      padding: 4.2rem 1rem 0;
+    }
+
+    .section-title {
+      margin: 0 0 0.35rem;
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+      font-size: clamp(2.2rem, 11vw, 3.2rem);
+      line-height: 1.04;
+      font-weight: 500;
+    }
+
+    .section-kicker {
+      margin: 0 0 1.3rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+      line-height: 1.7;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.62rem;
+      margin: 1.2rem 0 0;
+    }
+
+    .metric {
+      min-height: 92px;
+      padding: 0.86rem 0.72rem;
+      border-radius: 18px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--accent-strong);
+      font-family: Georgia, serif;
+      font-size: 1.75rem;
+      line-height: 1;
+      font-weight: 500;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 0.42rem;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 850;
+      line-height: 1.35;
+    }
+
+    .series-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .series-card {
+      position: relative;
+      display: grid;
+      min-height: 440px;
+      overflow: hidden;
+      padding: 0;
+      border: 1px solid rgba(238, 230, 216, 0.15);
+      border-radius: var(--radius-lg);
+      background: #10100d;
+      box-shadow:
+        0 22px 60px rgba(0, 0, 0, 0.42),
+        0 0 42px rgba(216, 173, 114, 0.055);
+      translate: var(--float-x, 0px) var(--float-y, 0px);
+    }
+
+    .series-card--short {
+      min-height: 360px;
+    }
+
+    .series-image {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #10100d;
+    }
+
+    .series-image::before {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      background-image: var(--photo);
+      background-size: cover;
+      background-position: center;
+      filter: blur(18px) saturate(0.72) brightness(0.58);
+      transform: scale(1.12);
+    }
+
+    .series-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.72)),
+        linear-gradient(115deg, transparent 0 42%, rgba(255, 246, 225, 0.14) 50%, transparent 58% 100%);
+      pointer-events: none;
+    }
+
+    .series-image img {
+      position: absolute;
+      inset: -10px;
+      width: calc(100% + 20px);
+      height: calc(100% + 20px);
+      object-fit: cover;
+      object-position: var(--image-position, center);
+      filter: saturate(0.9) contrast(1.03) brightness(0.88);
+      transform: scale(1.03);
+    }
+
+    .series-copy {
+      position: relative;
+      align-self: end;
+      z-index: 2;
+      display: grid;
+      gap: 0.42rem;
+      width: calc(100% - 1.3rem);
+      margin: 0.65rem;
+      padding: 0.9rem 0.92rem;
+      border-radius: 16px;
+      text-align: left;
+    }
+
+    .series-copy h3 {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+      font-size: 1.78rem;
+      line-height: 1.15;
+      font-weight: 500;
+    }
+
+    .series-copy p {
+      margin: 0;
+      color: rgba(240, 228, 207, 0.67);
+      font-size: 0.82rem;
+      font-weight: 850;
+      line-height: 1.55;
+    }
+
+    .method-grid {
+      display: grid;
+      gap: 0.82rem;
+    }
+
+    .method-card {
+      position: relative;
+      min-height: 190px;
+      padding: 1.2rem;
+      border-radius: var(--radius-md);
+      translate: var(--float-x, 0px) var(--float-y, 0px);
+    }
+
+    .method-card small {
+      color: var(--accent);
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .method-card h3 {
+      margin: 0.82rem 0 0.65rem;
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+      font-size: 1.46rem;
+      line-height: 1.26;
+      font-weight: 500;
+    }
+
+    .method-card p {
+      margin: 0;
+      color: rgba(232, 216, 188, 0.62);
+      font-size: 0.9rem;
+      line-height: 1.72;
+      font-weight: 650;
+    }
+
+    .slide-viewer {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(238, 230, 216, 0.16);
+      border-radius: var(--radius-lg);
+      background: rgba(13, 13, 11, 0.74);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.48);
+    }
+
+    .slide-badge {
+      position: absolute;
+      left: 0.8rem;
+      top: 0.8rem;
+      z-index: 4;
+      display: grid;
+      gap: 0.14rem;
+      min-width: 130px;
+      padding: 0.68rem 0.76rem;
+      border-radius: 14px;
+    }
+
+    .slide-badge strong {
+      color: var(--ink);
+      font-size: 0.96rem;
+    }
+
+    .slide-badge span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 750;
+    }
+
+    .slide-viewer img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: contain;
+      background:
+        radial-gradient(ellipse at 50% 45%, rgba(216, 173, 114, 0.08), transparent 46%),
+        #0d0d0b;
+    }
+
+    .slide-controls {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.8rem;
+      border-top: 1px solid rgba(238, 230, 216, 0.13);
+    }
+
+    .slide-controls button {
+      min-height: 40px;
+      border: 1px solid rgba(238, 230, 216, 0.18);
+      border-radius: 999px;
+      color: var(--ink);
+      background: rgba(238, 230, 216, 0.07);
+      font-weight: 850;
+    }
+
+    .slide-controls span {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 850;
+    }
+
+    .contact-panel {
+      padding-bottom: 2rem;
+    }
+
+    .contact-title {
+      margin: 0 0 1.2rem;
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+      font-size: clamp(2.15rem, 11vw, 3.1rem);
+      line-height: 1.08;
+      font-weight: 500;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 0.65rem;
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .contact-list li {
+      padding: 0.86rem 0.92rem;
+      border: 1px solid rgba(238, 230, 216, 0.1);
+      border-radius: 14px;
+      background: rgba(7, 7, 6, 0.32);
+      color: rgba(240, 228, 207, 0.72);
+      font-size: 0.88rem;
+      line-height: 1.56;
+      font-weight: 700;
+    }
+
+    .bottom-dock {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 60;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.34rem;
+      padding: 0.42rem;
+      border-radius: 999px;
+    }
+
+    .bottom-dock a,
+    .bottom-dock button {
+      display: grid;
+      place-items: center;
+      min-height: 42px;
+      border: 0;
+      border-radius: 999px;
+      color: rgba(240, 228, 207, 0.76);
+      background: transparent;
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .bottom-dock .is-primary {
+      color: #17120d;
+      background: linear-gradient(135deg, #f2d8ad, #d8ad72);
+      box-shadow: 0 0 24px rgba(216, 173, 114, 0.28);
+    }
+
+    .modal,
+    .qr-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: grid;
+      place-items: center;
+      padding: 0.9rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at var(--cursor-x) var(--cursor-y), rgba(216, 173, 114, 0.18), transparent 24rem),
+        rgba(5, 5, 4, 0.9);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: opacity 300ms var(--ease-out), visibility 300ms var(--ease-out);
+    }
+
+    .modal.is-open,
+    .qr-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-card,
+    .qr-card {
+      position: relative;
+      width: min(100%, 380px);
+      max-height: 90svh;
+      overflow-y: auto;
+      border-radius: var(--radius-lg);
+      transform: translateY(22px) scale(0.96);
+      transition: transform 320ms var(--ease-out);
+    }
+
+    .modal.is-open .modal-card,
+    .qr-modal.is-open .qr-card {
+      transform: translateY(0) scale(1);
+      animation: modalGlassIn 500ms var(--ease-out) both;
+    }
+
+    .modal-copy {
+      padding: 1.15rem 1.15rem 0;
+    }
+
+    .modal-copy small,
+    .qr-copy small {
+      color: var(--accent);
+      font-size: 0.74rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+    }
+
+    .modal-copy h3,
+    .qr-copy h3 {
+      margin: 0.46rem 0 0.58rem;
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+      font-size: 2rem;
+      line-height: 1.14;
+      font-weight: 500;
+    }
+
+    .modal-copy p,
+    .qr-copy p {
+      margin: 0;
+      color: rgba(232, 216, 188, 0.62);
+      font-size: 0.9rem;
+      line-height: 1.72;
+    }
+
+    .modal-gallery {
+      display: grid;
+      gap: 0.7rem;
+      padding: 1rem;
+    }
+
+    .modal-gallery figure {
+      position: relative;
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid rgba(238, 230, 216, 0.14);
+      border-radius: 16px;
+      background: #10100d;
+    }
+
+    .modal-gallery img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      filter: saturate(0.92) contrast(1.02) brightness(0.96);
+    }
+
+    .close-button {
+      position: absolute;
+      top: 0.78rem;
+      right: 0.78rem;
+      z-index: 5;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(238, 230, 216, 0.2);
+      border-radius: 50%;
+      color: #17120d;
+      background: linear-gradient(135deg, #f2d8ad, #d8ad72);
+      box-shadow: 0 0 22px rgba(216, 173, 114, 0.34);
+    }
+
+    .close-button span,
+    .close-button span::after {
+      position: absolute;
+      left: 12px;
+      top: 19px;
+      width: 17px;
+      height: 2px;
+      border-radius: 99px;
+      background: currentColor;
+      content: "";
+    }
+
+    .close-button span {
+      transform: rotate(45deg);
+    }
+
+    .close-button span::after {
+      left: 0;
+      top: 0;
+      transform: rotate(90deg);
+    }
+
+    .qr-card {
+      display: grid;
+      gap: 0.9rem;
+      padding: 1rem;
+    }
+
+    .qr-copy {
+      padding: 1rem 0.88rem 0;
+    }
+
+    .qr-code-shell {
+      position: relative;
+      isolation: isolate;
+      width: min(100%, 292px);
+      margin: 0 auto;
+      padding: 0.66rem;
+      border: 1px solid rgba(216, 173, 114, 0.42);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at var(--local-x, 34%) var(--local-y, 18%), rgba(255, 236, 204, 0.18), transparent 42%),
+        linear-gradient(145deg, rgba(255, 236, 204, 0.13), rgba(255, 255, 255, 0.035)),
+        rgba(24, 20, 16, 0.72);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -2px 10px rgba(0, 0, 0, 0.34),
+        0 22px 64px rgba(0, 0, 0, 0.42),
+        0 0 42px rgba(216, 173, 114, 0.16);
+      backdrop-filter: blur(20px) saturate(1.12);
+      -webkit-backdrop-filter: blur(20px) saturate(1.12);
+    }
+
+    .qr-code-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0.66rem;
+      z-index: 2;
+      border-radius: 18px;
+      pointer-events: none;
+      background:
+        linear-gradient(115deg, transparent 0 42%, rgba(255, 246, 225, 0.18) 50%, transparent 58% 100%),
+        radial-gradient(circle at 16% 12%, rgba(216, 173, 114, 0.08), transparent 36%);
+      mix-blend-mode: soft-light;
+    }
+
+    .qr-code-shell img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 18px;
+      object-fit: contain;
+      background: var(--qr-paper);
+      filter: contrast(1.05) saturate(0.92);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+    }
+
+    .qr-tip {
+      justify-self: start;
+      margin: 0 0.88rem 0.9rem;
+      padding: 0.44rem 0.7rem;
+      border: 1px solid rgba(216, 173, 114, 0.22);
+      border-radius: 999px;
+      color: var(--accent-strong);
+      background: rgba(216, 173, 114, 0.08);
+      font-size: 0.75rem;
+      font-weight: 900;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      filter: blur(5px);
+      transition: opacity 680ms var(--ease-out), transform 680ms var(--ease-out), filter 680ms var(--ease-out);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    @keyframes titleRise {
+      from {
+        opacity: 0;
+        transform: translateY(32px);
+        filter: blur(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes textGradientFlow {
+      from {
+        background-position: 0% 50%;
+      }
+      to {
+        background-position: 100% 50%;
+      }
+    }
+
+    @keyframes mobileLightSweep {
+      from {
+        transform: translate3d(-2.4%, -1.2%, 0);
+        opacity: 0.58;
+      }
+      to {
+        transform: translate3d(2.4%, 1.2%, 0);
+        opacity: 0.9;
+      }
+    }
+
+    @keyframes tapBurst {
+      from {
+        opacity: 0.86;
+        transform: translate(-50%, -50%) scale(0.35);
+      }
+      to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(8);
+      }
+    }
+
+    @keyframes modalGlassIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.94);
+        filter: blur(8px) brightness(0.94);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0) brightness(1);
+      }
+    }
+
+    @media (max-width: 360px) {
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .series-card {
+        min-height: 390px;
+      }
+
+      .bottom-dock a,
+      .bottom-dock button {
+        font-size: 0.72rem;
+      }
+    }
+
+    @media (min-width: 520px) {
+      .mobile-shell {
+        width: 430px;
+        margin: 0 auto;
+        box-shadow: 0 0 80px rgba(0, 0, 0, 0.48);
+      }
+
+      .topbar,
+      .bottom-dock {
+        left: calc(50% - 203px);
+        right: calc(50% - 203px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-shell" id="top">
+    <div class="grain" aria-hidden="true"></div>
+    <div class="tap-burst-layer" id="tapBurstLayer" aria-hidden="true"></div>
+
+    <header class="topbar" aria-label="手机版导航">
+      <a class="brand touchable" href="#top" aria-label="麦田里的修猫首页">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>麦田里的修猫</span>
+      </a>
+      <button class="contact-link touchable" type="button" data-open-qr>联系拍摄</button>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="heroTitle">
+        <div class="hero-content">
+          <p class="eyebrow">PORTRAIT PORTFOLIO</p>
+          <h1 id="heroTitle"><span>光影人像</span>作品集</h1>
+          <p class="hero-copy gradient-copy">从旧室窗光、夜景烟火到国风造型，把人物状态和场景光线整理成完整组照。</p>
+          <div class="hero-actions">
+            <a class="button button--primary touchable" href="#series">查看作品</a>
+            <a class="button touchable" href="#deck">原稿选页</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="mobile-section reveal" id="about" aria-labelledby="aboutTitle">
+        <p class="eyebrow">ABOUT THE WORK</p>
+        <h2 class="section-title" id="aboutTitle">人物状态、光线和主题。</h2>
+        <p class="section-kicker gradient-copy">拍摄时先判断主光方向、背景层次和环境颜色，再通过动作与道具降低摆拍感，最后按色调和景别整理成组。</p>
+        <div class="metric-grid" aria-label="作品集数据">
+          <div class="metric"><strong>32</strong><span>摄影集选页</span></div>
+          <div class="metric"><strong>7</strong><span>核心作品组</span></div>
+          <div class="metric"><strong>40+</strong><span>精选照片</span></div>
+        </div>
+      </section>
+
+      <section class="mobile-section reveal" id="series" aria-labelledby="seriesTitle">
+        <p class="eyebrow">SELECTED SERIES</p>
+        <h2 class="section-title" id="seriesTitle">成片系列</h2>
+        <p class="section-kicker">每张卡片都把图片和文字锁在同一个摄影板块里，滑动时比例不会散开。</p>
+
+        <div class="series-list">
+          <button class="series-card touchable" style="--photo: url('assets/photos/night_fire_05.jpg')" data-title="夜色烟火" data-label="夜景 / 烟火 / 环境光" data-note="用环境亮点和烟火轨迹补足夜景层次，人物动作不脱离现场。" data-images="night_fire_04,night_fire_05,night_fire_01,night_fire_02,night_fire_03">
+            <span class="series-image"><img src="assets/photos/night_fire_05.jpg" alt="夜色烟火系列"></span>
+            <span class="series-copy"><h3>夜色烟火</h3><p>夜景 / 烟火 / 环境光</p></span>
+          </button>
+          <button class="series-card series-card--short touchable" style="--photo: url('assets/photos/light_oldroom_01.jpg')" data-title="旧室微光" data-label="窗光 / 暖调 / 静态" data-note="旧室中的低照度光线，保留暗部层次和人物眼神。" data-images="light_oldroom_01,light_film_01,light_film_02,light_film_03,light_film_04">
+            <span class="series-image"><img src="assets/photos/light_oldroom_01.jpg" alt="旧室微光人像"></span>
+            <span class="series-copy"><h3>旧室微光</h3><p>窗光 / 暖调 / 静态</p></span>
+          </button>
+          <button class="series-card series-card--short touchable" style="--photo: url('assets/photos/lowkey_05.jpg')" data-title="暗调棚拍" data-label="侧光 / 肖像 / 反差" data-note="侧光建立面部轮廓，暗部保留情绪，不把背景完全拍死。" data-images="lowkey_04,lowkey_05,lowkey_01,lowkey_02,lowkey_03">
+            <span class="series-image"><img src="assets/photos/lowkey_05.jpg" alt="暗调棚拍系列"></span>
+            <span class="series-copy"><h3>暗调棚拍</h3><p>侧光 / 肖像 / 反差</p></span>
+          </button>
+          <button class="series-card touchable" style="--photo: url('assets/photos/season_cherry_03.jpg')" data-title="春樱花海" data-label="春樱 / 花海 / 前景" data-note="用花影、前景和明亮色块组织画面，保留季节气息。" data-images="season_cherry_02,season_cherry_01,season_cherry_03,season_rape_01">
+            <span class="series-image"><img src="assets/photos/season_cherry_03.jpg" alt="春樱花海系列"></span>
+            <span class="series-copy"><h3>春樱花海</h3><p>春樱 / 花海 / 前景</p></span>
+          </button>
+          <button class="series-card touchable" style="--photo: url('assets/photos/story_christmas_03.jpg')" data-title="节日布景" data-label="场景 / 道具 / 情绪" data-note="布景不是背景板，而是人物动作和故事的落点。" data-images="story_snow_01,story_christmas_01,story_christmas_02,story_christmas_03,story_christmas_04,story_gothic_01,story_gothic_02,story_gothic_03">
+            <span class="series-image"><img src="assets/photos/story_christmas_03.jpg" alt="节日布景系列"></span>
+            <span class="series-copy"><h3>节日布景</h3><p>场景 / 道具 / 情绪</p></span>
+          </button>
+          <button class="series-card series-card--short touchable" style="--photo: url('assets/photos/style_hanfu_07.jpg')" data-title="国风造型" data-label="国风 / 妆造 / 场景" data-note="在复杂场景中保持人物可读，妆造和环境统一。" data-images="style_hanfu_07,style_hanfu_01,style_hanfu_02,style_hanfu_03,style_hanfu_04,style_hanfu_05,style_hanfu_06">
+            <span class="series-image"><img src="assets/photos/style_hanfu_07.jpg" alt="国风造型系列"></span>
+            <span class="series-copy"><h3>国风造型</h3><p>国风 / 妆造 / 场景</p></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="mobile-section reveal" id="method" aria-labelledby="methodTitle">
+        <p class="eyebrow">SHOOTING METHOD</p>
+        <h2 class="section-title" id="methodTitle">拍摄方式</h2>
+        <p class="section-kicker">不堆信息，重点看光线判断、场景组织和成片节奏。</p>
+        <div class="method-grid">
+          <article class="method-card touchable"><small>01</small><h3>先确认主光和暗部层次</h3><p>室内窗光、烟火夜景和低调棚拍都先判断光源方向，再决定人物位置和曝光取舍。</p></article>
+          <article class="method-card touchable"><small>02</small><h3>让场景成为人物的情绪</h3><p>道具、布景、服装和背景颜色一起服务主题，避免照片只剩下单张好看。</p></article>
+          <article class="method-card touchable"><small>03</small><h3>用小动作引导自然状态</h3><p>通过走动、回头、触碰道具、看向光源等方式，保留人物的松弛感。</p></article>
+        </div>
+      </section>
+
+      <section class="mobile-section reveal" id="deck" aria-labelledby="deckTitle">
+        <p class="eyebrow">ORIGINAL PAGES</p>
+        <h2 class="section-title" id="deckTitle">原稿选页</h2>
+        <p class="section-kicker gradient-copy">把摄影作品集 PDF 中的精选页面放进手机比例里，保留主题、色调、排版和成片组织方式。</p>
+        <div class="slide-viewer">
+          <div class="slide-badge">
+            <strong id="slideName">暗调肖像</strong>
+            <span id="slideDesc">摄影集原稿页</span>
+          </div>
+          <img id="slideImage" src="assets/slides/slide-30.jpg" alt="摄影集精选页面">
+          <div class="slide-controls">
+            <button class="touchable" type="button" id="prevSlide">上一页</button>
+            <span id="slideMeta">1 / 15</span>
+            <button class="touchable" type="button" id="nextSlide">下一页</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="mobile-section contact-panel reveal" id="contact" aria-labelledby="contactTitle">
+        <p class="eyebrow">CONTACT</p>
+        <h2 class="contact-title" id="contactTitle">继续把光线和人物状态拍完整。</h2>
+        <button class="button button--primary touchable" type="button" data-open-qr>联系拍摄</button>
+        <ul class="contact-list">
+          <li>人像拍摄：旧室、外景、夜景、棚拍</li>
+          <li>主题策划：服装、道具、场景和情绪统一</li>
+          <li>后期整理：按系列色调、景别和节奏交付</li>
+        </ul>
+      </section>
+    </main>
+
+    <nav class="bottom-dock" aria-label="底部快速导航">
+      <a class="touchable" href="#about">介绍</a>
+      <a class="touchable" href="#series">作品</a>
+      <a class="touchable" href="#deck">原稿</a>
+      <button class="touchable is-primary" type="button" data-open-qr>联系</button>
+    </nav>
+  </div>
+
+  <div class="modal" id="seriesModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-card">
+      <button class="close-button touchable" type="button" id="modalClose" aria-label="关闭作品图库"><span aria-hidden="true"></span></button>
+      <div class="modal-copy">
+        <small id="modalLabel">SELECTED SERIES</small>
+        <h3 id="modalTitle">作品组</h3>
+        <p id="modalNote">作品说明</p>
+      </div>
+      <div class="modal-gallery" id="modalGallery" aria-label="作品组照片"></div>
+    </div>
+  </div>
+
+  <div class="qr-modal" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrTitle" aria-hidden="true">
+    <div class="qr-card">
+      <button class="close-button touchable" type="button" id="qrClose" aria-label="关闭微信二维码"><span aria-hidden="true"></span></button>
+      <div class="qr-copy">
+        <small>WECHAT CONTACT</small>
+        <h3 id="qrTitle">扫码联系拍摄</h3>
+        <p>微信扫码添加，沟通主题、场景、服装与成片交付。</p>
+      </div>
+      <div class="qr-code-shell touchable" aria-label="微信二维码">
+        <img src="assets/wechat-qr-tight.png" alt="微信二维码，扫码添加好友">
+      </div>
+      <span class="qr-tip">已裁切主体并保留扫码静区</span>
+    </div>
+  </div>
+
+  <script>
+    const body = document.body;
+    const tapBurstLayer = document.getElementById("tapBurstLayer");
+    const modal = document.getElementById("seriesModal");
+    const modalClose = document.getElementById("modalClose");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalLabel = document.getElementById("modalLabel");
+    const modalNote = document.getElementById("modalNote");
+    const modalGallery = document.getElementById("modalGallery");
+    const qrModal = document.getElementById("qrModal");
+    const qrClose = document.getElementById("qrClose");
+
+    function updatePointer(event) {
+      document.documentElement.style.setProperty("--cursor-x", `${event.clientX}px`);
+      document.documentElement.style.setProperty("--cursor-y", `${event.clientY}px`);
+    }
+
+    window.addEventListener("pointermove", updatePointer, { passive: true });
+
+    function setLocalLight(event, element) {
+      const rect = element.getBoundingClientRect();
+      element.style.setProperty("--local-x", `${event.clientX - rect.left}px`);
+      element.style.setProperty("--local-y", `${event.clientY - rect.top}px`);
+    }
+
+    function createTapBurst(event) {
+      const burst = document.createElement("span");
+      burst.className = "tap-burst";
+      burst.style.setProperty("--burst-x", `${event.clientX}px`);
+      burst.style.setProperty("--burst-y", `${event.clientY}px`);
+      tapBurstLayer.appendChild(burst);
+      window.setTimeout(() => burst.remove(), 700);
+    }
+
+    function triggerPress(element) {
+      element.classList.add("is-pressed");
+      window.setTimeout(() => element.classList.remove("is-pressed"), 460);
+    }
+
+    function bindTouchable() {
+      document.querySelectorAll(".touchable").forEach((element) => {
+        if (element.dataset.touchBound === "true") return;
+        element.dataset.touchBound = "true";
+        element.addEventListener("pointermove", (event) => setLocalLight(event, element), { passive: true });
+        element.addEventListener("pointerdown", (event) => {
+          createTapBurst(event);
+          triggerPress(element);
+        });
+      });
+    }
+
+    bindTouchable();
+
+    function imagePath(imageId) {
+      return `assets/photos/${imageId}.jpg`;
+    }
+
+    function openSeriesModal(card) {
+      const images = card.dataset.images.split(",").map((item) => item.trim()).filter(Boolean);
+      modalTitle.textContent = card.dataset.title;
+      modalLabel.textContent = card.dataset.label;
+      modalNote.textContent = card.dataset.note;
+      modalGallery.innerHTML = images.map((imageId) => {
+        const src = imagePath(imageId);
+        return `<figure><img src="${src}" alt="${card.dataset.title}作品"></figure>`;
+      }).join("");
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      body.classList.add("is-locked");
+      modalClose.focus();
+      bindTouchable();
+    }
+
+    function closeSeriesModal() {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      if (!qrModal.classList.contains("is-open")) body.classList.remove("is-locked");
+    }
+
+    function openQrModal() {
+      qrModal.classList.add("is-open");
+      qrModal.setAttribute("aria-hidden", "false");
+      body.classList.add("is-locked");
+      qrClose.focus();
+    }
+
+    function closeQrModal() {
+      qrModal.classList.remove("is-open");
+      qrModal.setAttribute("aria-hidden", "true");
+      if (!modal.classList.contains("is-open")) body.classList.remove("is-locked");
+    }
+
+    document.querySelectorAll(".series-card").forEach((card) => {
+      card.addEventListener("click", () => openSeriesModal(card));
+    });
+
+    document.querySelectorAll("[data-open-qr]").forEach((button) => {
+      button.addEventListener("click", openQrModal);
+    });
+
+    modalClose.addEventListener("click", closeSeriesModal);
+    qrClose.addEventListener("click", closeQrModal);
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeSeriesModal();
+    });
+
+    qrModal.addEventListener("click", (event) => {
+      if (event.target === qrModal) closeQrModal();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) closeSeriesModal();
+      if (event.key === "Escape" && qrModal.classList.contains("is-open")) closeQrModal();
+    });
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
+
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const floatingElements = Array.from(document.querySelectorAll(".series-card, .method-card"));
+    let driftAngle = 0;
+
+    function updateFloatingGlass() {
+      if (!motionQuery.matches) {
+        driftAngle += 0.008;
+        floatingElements.forEach((element, index) => {
+          const phase = index * 1.28;
+          const floatX = Math.cos(driftAngle * 0.72 + phase) * 1.4;
+          const floatY = Math.sin(driftAngle + phase) * 2.6;
+          element.style.setProperty("--float-x", `${floatX.toFixed(2)}px`);
+          element.style.setProperty("--float-y", `${floatY.toFixed(2)}px`);
+        });
+      }
+      window.requestAnimationFrame(updateFloatingGlass);
+    }
+
+    updateFloatingGlass();
+
+    const slides = [
+      { id: "slide-05", name: "作品封面", desc: "摄影集开篇页" },
+      { id: "slide-08", name: "旧室微光", desc: "室内光线原稿" },
+      { id: "slide-13", name: "节日布景", desc: "主题场景原稿" },
+      { id: "slide-15", name: "暗夜造型", desc: "人物造型原稿" },
+      { id: "slide-16", name: "雪夜伞下", desc: "雪夜主题原稿" },
+      { id: "slide-18", name: "花海侧影", desc: "外景花海原稿" },
+      { id: "slide-19", name: "春日花影", desc: "春樱人像原稿" },
+      { id: "slide-20", name: "秋日映画", desc: "秋季外景原稿" },
+      { id: "slide-22", name: "湖边日常", desc: "日常叙事原稿" },
+      { id: "slide-27", name: "烟火夜景", desc: "夜景微光原稿" },
+      { id: "slide-28", name: "校园静叙", desc: "校园场景原稿" },
+      { id: "slide-29", name: "胶片光感", desc: "电影感光线原稿" },
+      { id: "slide-30", name: "暗调肖像", desc: "棚拍肖像原稿" },
+      { id: "slide-31", name: "国风造型", desc: "国风场景原稿" },
+      { id: "slide-32", name: "收束页面", desc: "摄影集结尾页" },
+    ];
+
+    const slideImage = document.getElementById("slideImage");
+    const slideName = document.getElementById("slideName");
+    const slideDesc = document.getElementById("slideDesc");
+    const slideMeta = document.getElementById("slideMeta");
+    const prevSlide = document.getElementById("prevSlide");
+    const nextSlide = document.getElementById("nextSlide");
+    let slideIndex = 12;
+
+    function updateSlide() {
+      const slide = slides[slideIndex];
+      slideImage.src = `assets/slides/${slide.id}.jpg`;
+      slideName.textContent = slide.name;
+      slideDesc.textContent = slide.desc;
+      slideMeta.textContent = `${slideIndex + 1} / ${slides.length}`;
+    }
+
+    function moveSlide(direction) {
+      slideIndex = (slideIndex + direction + slides.length) % slides.length;
+      slideImage.animate(
+        [
+          { opacity: 0.35, transform: "scale(0.985)" },
+          { opacity: 1, transform: "scale(1)" },
+        ],
+        { duration: 320, easing: "cubic-bezier(.2,.8,.2,1)" },
+      );
+      updateSlide();
+    }
+
+    prevSlide.addEventListener("click", () => moveSlide(-1));
+    nextSlide.addEventListener("click", () => moveSlide(1));
+    updateSlide();
+  </script>
+</body>
+</html>
