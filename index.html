@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="麦田里的修猫人像摄影作品集，呈现旧室微光、夜景烟火、暗调棚拍、季节外景、节日布景、国风造型与校园日常等摄影作品。">
-  <title>麦田里的修猫｜人像摄影作品集</title>
+  <meta name="description" content="修猫摄影人像作品集，呈现旧室微光、夜景烟火、暗调棚拍、季节外景、节日布景、国风造型与校园日常等摄影作品。">
+  <title>修猫摄影</title>
   <link rel="icon" href="data:,">
   <style>
     :root {
@@ -212,74 +212,85 @@
     }
 
     @media (min-width: 861px) {
-      .section:not(.hero)::before {
-        content: "";
-        position: absolute;
-        inset: -7rem -5vw;
-        z-index: 0;
-        pointer-events: none;
-        background-image:
-          linear-gradient(135deg, transparent 0 42%, rgba(72, 68, 61, 0.22) 43%, rgba(72, 68, 61, 0.22) 46%, transparent 47% 100%),
-          linear-gradient(135deg, transparent 0 43%, rgba(42, 41, 38, 0.28) 44%, rgba(42, 41, 38, 0.28) 46%, transparent 47% 100%),
-          linear-gradient(135deg, transparent 0 44%, rgba(78, 52, 33, 0.18) 45%, rgba(78, 52, 33, 0.18) 47%, transparent 48% 100%),
-          linear-gradient(135deg, transparent 0 42%, rgba(216, 173, 114, 0.055) 43%, rgba(216, 173, 114, 0.055) 45%, transparent 46% 100%),
-          linear-gradient(135deg, transparent 0 43%, rgba(58, 55, 50, 0.22) 44%, rgba(58, 55, 50, 0.22) 46%, transparent 47% 100%),
-          linear-gradient(135deg, transparent 0 44%, rgba(34, 33, 31, 0.34) 45%, rgba(34, 33, 31, 0.34) 47%, transparent 48% 100%);
-        background-repeat: no-repeat;
-        background-size:
-          420px 116px,
-          300px 86px,
-          520px 132px,
-          260px 72px,
-          360px 96px,
-          230px 64px;
-        background-position:
-          94% 7%,
-          78% 22%,
-          92% 48%,
-          72% 62%,
-          88% 78%,
-          62% 36%;
-        mask-image:
-          radial-gradient(ellipse at 76% 34%, black 0 48%, transparent 75%),
-          linear-gradient(180deg, transparent 0%, black 14%, black 88%, transparent 100%);
-        -webkit-mask-image:
-          radial-gradient(ellipse at 76% 34%, black 0 48%, transparent 75%),
-          linear-gradient(180deg, transparent 0%, black 14%, black 88%, transparent 100%);
-        mix-blend-mode: screen;
-        opacity: var(--stripe-opacity, 0.5);
-        transform: translate3d(var(--stripe-x, 0), var(--stripe-y, 0), 0);
-        animation: diagonalStripeDrift 24s ease-in-out infinite alternate;
+      .section.has-stripes {
+        overflow: hidden;
       }
 
+      .section-stripes {
+        position: absolute;
+        inset: -9rem -9vw;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+        opacity: var(--stripe-layer-opacity, 0.44);
+        mix-blend-mode: screen;
+        mask-image: linear-gradient(180deg, transparent 0%, black 8%, black 92%, transparent 100%);
+        -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 8%, black 92%, transparent 100%);
+      }
+
+      .section-stripes--calm {
+        --stripe-layer-opacity: 0.3;
+        mask-image:
+          radial-gradient(ellipse at 78% 42%, black 0 54%, transparent 76%),
+          linear-gradient(180deg, transparent 0%, black 12%, black 86%, transparent 100%);
+        -webkit-mask-image:
+          radial-gradient(ellipse at 78% 42%, black 0 54%, transparent 76%),
+          linear-gradient(180deg, transparent 0%, black 12%, black 86%, transparent 100%);
+      }
+
+      .section-stripes--dense {
+        --stripe-layer-opacity: 0.48;
+      }
+
+      .section-stripes--scattered {
+        --stripe-layer-opacity: 0.36;
+        mask-image:
+          radial-gradient(ellipse at 80% 30%, black 0 42%, transparent 70%),
+          radial-gradient(ellipse at 18% 78%, black 0 34%, transparent 64%),
+          linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+        -webkit-mask-image:
+          radial-gradient(ellipse at 80% 30%, black 0 42%, transparent 70%),
+          radial-gradient(ellipse at 18% 78%, black 0 34%, transparent 64%),
+          linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+      }
+
+      .stripe-line {
+        position: absolute;
+        left: var(--stripe-left);
+        top: var(--stripe-top);
+        width: var(--stripe-width);
+        height: var(--stripe-height);
+        border-radius: 999px;
+        opacity: var(--stripe-opacity);
+        background: linear-gradient(
+          90deg,
+          rgba(var(--stripe-rgb), 0),
+          rgba(var(--stripe-rgb), 0.72) 16%,
+          rgba(var(--stripe-rgb), 0.96) 50%,
+          rgba(var(--stripe-rgb), 0.72) 84%,
+          rgba(var(--stripe-rgb), 0)
+        );
+        box-shadow:
+          0 0 9px rgba(var(--stripe-rgb), 0.14),
+          0 0 24px rgba(216, 173, 114, 0.04);
+        transform-origin: center;
+        transform: translate3d(calc(var(--stripe-drift-x) * -1), calc(var(--stripe-drift-y) * -1), 0) rotate(-43deg);
+        animation: sectionStripeDrift var(--stripe-duration) ease-in-out var(--stripe-delay) infinite alternate;
+      }
+
+      .stripe-line.is-bold {
+        height: calc(var(--stripe-height) + 1px);
+        box-shadow:
+          0 0 10px rgba(var(--stripe-rgb), 0.18),
+          0 0 28px rgba(216, 173, 114, 0.055);
+      }
+
+      .hero__content,
+      .hero-gallery,
       .section:not(.hero) .section__inner,
       .section:not(.hero) .closing-grid {
         position: relative;
         z-index: 2;
-      }
-
-      .works {
-        --stripe-opacity: 0.72;
-        --stripe-x: 0.8%;
-        --stripe-y: -0.4%;
-      }
-
-      .strengths {
-        --stripe-opacity: 0.58;
-        --stripe-x: -0.7%;
-        --stripe-y: 0.5%;
-      }
-
-      .deck {
-        --stripe-opacity: 0.64;
-        --stripe-x: 0.4%;
-        --stripe-y: 0.8%;
-      }
-
-      .closing {
-        --stripe-opacity: 0.68;
-        --stripe-x: -0.5%;
-        --stripe-y: -0.2%;
       }
     }
 
@@ -2056,24 +2067,16 @@
       }
     }
 
-    @keyframes diagonalStripeDrift {
+    @keyframes sectionStripeDrift {
       from {
-        background-position:
-          94% 7%,
-          78% 22%,
-          92% 48%,
-          72% 62%,
-          88% 78%,
-          62% 36%;
+        opacity: calc(var(--stripe-opacity) * 0.78);
+        filter: brightness(0.96);
+        transform: translate3d(calc(var(--stripe-drift-x) * -1), calc(var(--stripe-drift-y) * -1), 0) rotate(-43deg);
       }
       to {
-        background-position:
-          92.5% 8.2%,
-          76.8% 23.1%,
-          90.8% 49.4%,
-          70.6% 62.8%,
-          86.7% 79.2%,
-          60.9% 37.3%;
+        opacity: var(--stripe-opacity);
+        filter: brightness(1.1);
+        transform: translate3d(var(--stripe-drift-x), var(--stripe-drift-y), 0) rotate(-43deg);
       }
     }
 
@@ -2371,9 +2374,9 @@
   <div class="noise" aria-hidden="true"></div>
 
   <header class="navbar" aria-label="主导航">
-    <a class="brand lightable" href="#top" aria-label="麦田里的修猫首页">
+    <a class="brand lightable" href="#top" aria-label="修猫摄影首页">
       <span class="brand__mark" aria-hidden="true"></span>
-      <span>麦田里的修猫</span>
+      <span>修猫摄影</span>
     </a>
     <nav class="nav-links" aria-label="页面章节">
       <a href="#about">摄影介绍</a>
@@ -2438,7 +2441,7 @@
       </div>
     </section>
 
-    <section class="section about reveal" id="about" aria-labelledby="aboutTitle">
+    <section class="section about reveal" id="about" data-stripe-style="scattered" aria-labelledby="aboutTitle">
       <div class="section__inner">
         <h2 class="section-heading" id="aboutTitle">摄影介绍</h2>
         <p class="section-kicker">人物状态 · 光线判断 · 主题成片</p>
@@ -2451,7 +2454,7 @@
 
           <div class="about-panel">
             <p class="eyebrow">ABOUT THE WORK</p>
-            <h3>麦田里的修猫</h3>
+            <h3>修猫摄影</h3>
             <p>作品以人像为主，重心放在光线、场景和人物状态。拍摄时先判断主光方向、背景层次和环境颜色，再通过动作与道具降低摆拍感，最后按色调和景别整理成组。</p>
 
             <dl class="info-grid">
@@ -2517,7 +2520,7 @@
       </div>
     </section>
 
-    <section class="section works reveal" id="works" aria-labelledby="worksTitle">
+    <section class="section works reveal" id="works" data-stripe-style="dense" aria-labelledby="worksTitle">
       <div class="section__inner">
         <h2 class="section-heading" id="worksTitle">成片系列</h2>
         <p class="section-kicker">每组作品来自一次主题或一种光线</p>
@@ -2547,7 +2550,7 @@
       </div>
     </section>
 
-    <section class="section strengths reveal" id="strengths" aria-labelledby="strengthsTitle">
+    <section class="section strengths reveal" id="strengths" data-stripe-style="dense" aria-labelledby="strengthsTitle">
       <div class="section__inner">
         <h2 class="section-heading" id="strengthsTitle">拍摄方式</h2>
         <p class="section-kicker">不堆信息，重点看光线与成片组织</p>
@@ -2612,7 +2615,7 @@
       </div>
     </section>
 
-    <section class="section deck reveal" id="deck" aria-labelledby="deckTitle">
+    <section class="section deck reveal" id="deck" data-stripe-style="dense" aria-labelledby="deckTitle">
       <div class="section__inner">
         <h2 class="section-heading" id="deckTitle">原稿选页</h2>
         <p class="section-kicker">保留摄影集里的完整页面节奏</p>
@@ -2639,7 +2642,7 @@
       </div>
     </section>
 
-    <section class="section closing reveal" id="contact" aria-labelledby="contactTitle">
+    <section class="section closing reveal" id="contact" data-stripe-style="dense" aria-labelledby="contactTitle">
       <div class="closing-grid">
         <div>
           <h2 id="contactTitle">继续把光线和人物状态拍完整。</h2>
@@ -2766,6 +2769,149 @@
     }
 
     bindLightEffects();
+
+    // 用真实圆头线段生成背景斜纹，避免渐变块产生平行四边形边缘。
+    const desktopStripeQuery = window.matchMedia("(min-width: 861px)");
+    const stripeColors = ["86, 78, 66", "64, 55, 45", "118, 82, 52"];
+    const stripeConfigs = {
+      calm: {
+        className: "section-stripes--calm",
+        rhythmCount: 38,
+        scatterCount: 30,
+        columns: 7,
+        xStart: 45,
+        xSpan: 78,
+        yStart: 3,
+        yGap: 9.4,
+        ySkew: 2.8,
+        widthMin: 118,
+        widthRange: 142,
+        opacityBase: 0.2,
+        opacityRange: 0.12
+      },
+      dense: {
+        className: "section-stripes--dense",
+        rhythmCount: 86,
+        scatterCount: 62,
+        columns: 10,
+        xStart: -8,
+        xSpan: 128,
+        yStart: 2,
+        yGap: 8.2,
+        ySkew: 2.2,
+        widthMin: 152,
+        widthRange: 218,
+        opacityBase: 0.27,
+        opacityRange: 0.18
+      },
+      scattered: {
+        className: "section-stripes--scattered",
+        rhythmCount: 28,
+        scatterCount: 58,
+        columns: 6,
+        xStart: -4,
+        xSpan: 116,
+        yStart: 4,
+        yGap: 10.6,
+        ySkew: 3.4,
+        widthMin: 86,
+        widthRange: 144,
+        opacityBase: 0.18,
+        opacityRange: 0.14
+      }
+    };
+
+    function setStripeStyle(line, spec) {
+      line.className = `stripe-line${spec.bold ? " is-bold" : ""}`;
+      line.style.setProperty("--stripe-left", `${spec.left.toFixed(2)}%`);
+      line.style.setProperty("--stripe-top", `${spec.top.toFixed(2)}%`);
+      line.style.setProperty("--stripe-width", `${Math.round(spec.width)}px`);
+      line.style.setProperty("--stripe-height", `${spec.height}px`);
+      line.style.setProperty("--stripe-opacity", spec.opacity.toFixed(3));
+      line.style.setProperty("--stripe-rgb", spec.rgb);
+      line.style.setProperty("--stripe-drift-x", `${spec.driftX.toFixed(2)}px`);
+      line.style.setProperty("--stripe-drift-y", `${spec.driftY.toFixed(2)}px`);
+      line.style.setProperty("--stripe-duration", `${spec.duration.toFixed(2)}s`);
+      line.style.setProperty("--stripe-delay", `${spec.delay.toFixed(2)}s`);
+    }
+
+    function appendRhythmStripes(layer, config, sectionIndex) {
+      for (let lineIndex = 0; lineIndex < config.rhythmCount; lineIndex += 1) {
+        const column = lineIndex % config.columns;
+        const row = Math.floor(lineIndex / config.columns);
+        const offset = (row % 2) * 5.8 + sectionIndex * 1.7;
+        const left = config.xStart + ((column * (config.xSpan / (config.columns - 1)) + offset + lineIndex * 0.9) % config.xSpan);
+        const top = config.yStart + ((row * config.yGap + column * config.ySkew + sectionIndex * 2.4) % 98);
+        const width = config.widthMin + ((lineIndex * 37 + sectionIndex * 29) % config.widthRange);
+        const opacity = config.opacityBase + (((lineIndex * 11 + sectionIndex * 7) % 100) / 100) * config.opacityRange;
+        const line = document.createElement("span");
+
+        setStripeStyle(line, {
+          left,
+          top,
+          width,
+          height: lineIndex % 7 === 0 ? 3 : 2,
+          opacity,
+          rgb: stripeColors[(lineIndex + sectionIndex) % stripeColors.length],
+          driftX: 4 + ((lineIndex + sectionIndex) % 5),
+          driftY: 3 + ((lineIndex * 2 + sectionIndex) % 6),
+          duration: 18 + ((lineIndex + sectionIndex) % 9),
+          delay: -1 * ((lineIndex * 0.31 + sectionIndex) % 7),
+          bold: lineIndex % 11 === 0
+        });
+
+        layer.appendChild(line);
+      }
+    }
+
+    function appendScatterStripes(layer, config, sectionIndex) {
+      for (let lineIndex = 0; lineIndex < config.scatterCount; lineIndex += 1) {
+        const left = config.xStart + ((lineIndex * 17.3 + sectionIndex * 9.6) % config.xSpan);
+        const top = 2 + ((lineIndex * 13.7 + sectionIndex * 6.8) % 104);
+        const width = Math.max(64, config.widthMin * 0.72 + ((lineIndex * 23 + sectionIndex * 31) % (config.widthRange * 0.86)));
+        const opacity = config.opacityBase * 0.82 + (((lineIndex * 19 + sectionIndex * 5) % 100) / 100) * config.opacityRange * 0.82;
+        const line = document.createElement("span");
+
+        setStripeStyle(line, {
+          left,
+          top,
+          width,
+          height: lineIndex % 9 === 0 ? 3 : 2,
+          opacity,
+          rgb: stripeColors[(lineIndex * 2 + sectionIndex) % stripeColors.length],
+          driftX: 2 + ((lineIndex + sectionIndex) % 5),
+          driftY: 2 + ((lineIndex * 3 + sectionIndex) % 5),
+          duration: 16 + ((lineIndex + sectionIndex) % 8),
+          delay: -1 * ((lineIndex * 0.43 + sectionIndex * 0.7) % 8),
+          bold: lineIndex % 17 === 0
+        });
+
+        layer.appendChild(line);
+      }
+    }
+
+    function buildSectionStripes() {
+      document.querySelectorAll(".section-stripes").forEach((layer) => layer.remove());
+      document.querySelectorAll(".has-stripes").forEach((section) => section.classList.remove("has-stripes"));
+
+      if (!desktopStripeQuery.matches) return;
+
+      document.querySelectorAll("[data-stripe-style]").forEach((section, sectionIndex) => {
+        const styleName = section.dataset.stripeStyle || "calm";
+        const config = stripeConfigs[styleName] || stripeConfigs.calm;
+        const layer = document.createElement("div");
+
+        section.classList.add("has-stripes");
+        layer.className = `section-stripes ${config.className}`;
+        layer.setAttribute("aria-hidden", "true");
+        appendRhythmStripes(layer, config, sectionIndex);
+        appendScatterStripes(layer, config, sectionIndex);
+        section.prepend(layer);
+      });
+    }
+
+    buildSectionStripes();
+    desktopStripeQuery.addEventListener("change", buildSectionStripes);
 
     // 复制轮播内容，让横向作品带无缝循环。
     const galleryTrack = document.getElementById("galleryTrack");
